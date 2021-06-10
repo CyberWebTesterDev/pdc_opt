@@ -1,0 +1,10 @@
+<div id="elkDataPanelContainer" class="buttons-block-data-panel shift-fixed-right">
+
+  <label for="filter-kibana-logs" class="span-info-header">Фильтр по сервису: </label>
+  <div class="params-block">
+    <span class="kibana-checkbox-label">Исключить?: </span><input onchange="onChangeListener(this)" id="excludeFlgELKFilter" type="checkbox"/>
+  </div>
+  <select id="filter-kibana-logs" onchange="handleInstanceController(true, this.value, 'app_name')">
+    <option value=""></option>
+  </select>
+</div>

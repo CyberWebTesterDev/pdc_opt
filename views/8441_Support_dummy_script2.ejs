@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title>RKK Adminkey</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/public/images/favicon2.ico">
+  <link rel="stylesheet" href="/public/css/bootstrap.css">
+  <link rel="stylesheet" href="/public/css/8441_main-styles.css">
+  
+  
+ </head>
+ <body>
+<!-- <div class="headlabel-dummy">
+<h1>RKK Adminkey</h1>
+</div> -->
+<!-- <div class="notification-container">
+  <label class="label-notif" onclick="hideElement('list_container')">Критичные проблемы РКК 2.0 на 17.06.2020 20:00 (мск)</label>
+  <div class="list-container" id="list_container" style="display: none">
+    <ul>
+      <li><a href="https://jiradev.int.fakeorg.ru/jira/browse/TTTPLN-28287" target="_blank">TTTPLN-28287</a> <span class="TTTPLN-blocker-colorizer">Блокер</span> <span class="TTTPLN-decision-colorizer">Переоткрыт</span> <span class="TTTPLN-info-colorizer">(Проблема локализована: из родительской заявки (потреб), если она заведена с предодобом (тип 3), этот предодоб копируется в дочернюю заявку КК, запрос в продкат идет с этим предодобом и продукты не находятся) Возможное обходное: апдейт типа ПП в дочерних заявках КК на 0</span> ПРОМ. КК. Ошибка вызова call2 (продкат не возвратил продуктов по КК, созданных по технологии КЭШ+КК (дочерние заявки))</li>
+      <li><a href="https://jiradev.int.fakeorg.ru/jira/browse/TTTPLN-28294" target="_blank">TTTPLN-28294</a> ПРОМ. МБ. Ошибка формирования ПФ (Зависание заявки на st Формирование ПФ "Согласие на обработку персональных данных" при обращении к prinservice получаем ошибку 500)</li>
+      <li><a href="https://jiradev.int.fakeorg.ru/jira/browse/TTTPLN-28294" target="_blank">TTTPLN-28362</a> <span class="TTTPLN-status-colorizer">Критический</span> <span class="TTTPLN-info-colorizer"> (предварительно исправлено. Идет проверка)</span> ПРОМ. slingservice. Проблема при подгрузке файла LockObtainFailedException (не отображается часть или несколько файлов при просмотре, связано с первичной ошибкой при загрузке файла)</li>
+      <li><a href="https://jiradev.int.fakeorg.ru/jira/browse/TTTPLN-28294" target="_blank">TTTPLN-28286</a> <span class="TTTPLN-blocker-colorizer">Блокер </span> ПРОМ. Админ. Не работает ОБРАБОТКА ТАЙМАУТОВ </li>
+    </ul>
+</div> -->
+<!--     <li><a href="https://jiradev.int.fakeorg.ru/jira/browse/TTTPLN-28306" target="_blank">TTTPLN-28306</a> <span class="TTTPLN-decision-colorizer">(решено)</span> ПРОМ. МБ. Массовые ошибки Не удалось получить ответ от SearchStoreService</li> -->
+    <!-- <p>Решение: Необходимо установить из дефекта https://jiradev.int.fakeorg.ru/jira/browse/TTTPLN-28216. Версия searchstoreservice с исправлением 1.0.15.619-37395d. mobilegateservice-1.0.15.464-0a8273e на Стенде-2 -->
+</p>
+  </ul>
+</div>
+
+<div id="root">
+
+  <div class="dimmer">
+  
+  <div class='container'>
+
+    <div class='loader'>
+      <font size="5px">Ожидание выполнения: получение данных по заявке...</font>
+      <font size="3px">Просьба не перезагружать страницу это увеличит время сбора данных</font>
+      <div class='spinner-simple'>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+<div id='supportPage'></div>
+
+<%- include('scripts/scripts-src.ejs') %>
+
+<script type="text/javascript">
+
+  (async () => {
+
+    console.log('Async function has been called');
+
+    const appnum = window.location.href.split('/')[4];
+    try {
+      let result = await fetch(`http://d6355:8440/frontrequest/aggregatedatafromdblight/${appnum}`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      let html = await result.text();
+      const root = document.getElementById('root');
+      root.innerHTML = html;
+      //document.addEventListener("mousemove", BPMRequest);
+      if ( (document.getElementById('getBPMBtn')) ) {
+        (document.getElementById('getBPMBtn')).addEventListener("click", () => {
+          SupportPageController.BPMRequest();
+        });
+
+        if ( (document.getElementById('getELKlogs')) ) {
+          SupportPageController.loadKibanaValidatorScript();
+          (document.getElementById('getELKlogs')).addEventListener('click', SupportPageController.getELKlogs);
+        }
+      }
+
+      
+
+    } catch (e) {
+      console.error(e);
+      document.body.innerHTML = e;
+    }
+    
+
+
+
+  })();
+  
+
+</script>
+
+
+
+
+
+
+ </body>
+
+</html>
+
+

@@ -1,0 +1,7 @@
+/node_modules
+/dist
+/access-data
+/build
+/sandbox
+/sqlscripts
+/.idea

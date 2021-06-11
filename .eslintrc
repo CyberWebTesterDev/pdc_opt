@@ -15,7 +15,7 @@
         "functions": "always-multiline"
       }],
       "arrow-spacing": "error",
-      "no-unused-vars": "error",
+      "no-unused-vars": "off",
       "no-label-var": "error",
       "no-underscore-dangle": "off",
       "object-curly-spacing": ["error", "always"],

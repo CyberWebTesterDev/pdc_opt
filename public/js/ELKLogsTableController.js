@@ -149,7 +149,7 @@ class ELKLogsTableController {
     }
   };
 
-  getSpecificRowsArrayByParameterValue = (parameterValue = null) => {
+  getSpecificRowsArrayByParameterValue = (parameterValue) => {
     return parameterValue
       ? this.logsTableState.bodyRowsArray.filter(
           cell => cell.parameterValue == parameterValue,
@@ -176,8 +176,8 @@ class ELKLogsTableController {
   };
 
   getTargetsToRenderByParameterValue = (
-    parameterValue = null,
-    parameterName = null,
+    parameterValue,
+    parameterName,
   ) => {
     if (parameterValue && !parameterName) {
       if (this.logsTableState.renderOption !== parameterValue) {
@@ -255,8 +255,8 @@ class ELKLogsTableController {
   };
 
   getTargetsToRenderByParameterValueOpt = (
-    parameterValue = null,
-    parameterName = null,
+    parameterValue,
+    parameterName,
   ) => {
     let { trsToRender, isRenderFiltered, bodyRowsArray } = this.logsTableState;
     const {
@@ -334,7 +334,7 @@ class ELKLogsTableController {
     }
   };
 
-  makeFilterOptions = (key = null) => {
+  makeFilterOptions = (key) => {
     const targetSelect = document.getElementById('filter-kibana-logs');
 
     if (targetSelect) {
@@ -364,8 +364,8 @@ elkController.makeFilterOptions();
 
 const handleInstanceController = (
   isCheckBox = false,
-  key = null,
-  parameterName = null,
+  key,
+  parameterName,
 ) => {
   console.log(
     `handleInstanceController: key is: ${key}, parameterName: ${parameterName}`,

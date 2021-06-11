@@ -1,5 +1,5 @@
 (async () => {
-  console.log("Async function has been called");
+  console.log('Async function has been called');
 
   const spinnerBPM = `<div class="dimmer">
       <div class='container'>
@@ -12,7 +12,7 @@
       </div>
     </div>`;
 
-  const appnum = window.location.href.split("/")[4];
+  const appnum = window.location.href.split('/')[4];
   const hostName = window.location.href.split('//').join('').split(':')[1];
   try {
     const result = await fetch(`http://${hostName}:8440/frontrequest/aggregatedatafromdblight/${appnum}`);
@@ -20,11 +20,10 @@
     document.body.innerHTML = html;
     //const direction = document.querySelector('#mainDataTable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2) > font:nth-child(1)').innerText;
     //const status = document.querySelector('#mainDataTable > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(8) > font:nth-child(1)').innerText;
-    const bpmBlock = document.getElementById("bpmDataContainer");
+    const bpmBlock = document.getElementById('bpmDataContainer');
     bpmBlock.innerHTML = spinnerBPM;
     //document.body.insertBefore(div, divTarget);
-    console.log("Sending request for BPM data");
-    const resultBPM = await fetch(`http://${hostName}:8440/frontrequest/bpmdata/${appnum}`);
+    console.log('Sending request for BPM data');
     const html2 = await result.text();
     bpmBlock.innerHTML = html2;
   } catch (e) {

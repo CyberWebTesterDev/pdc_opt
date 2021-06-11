@@ -1,0 +1,57 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+      "semi": ["error", "always"],
+      "quotes": ["error", "single"],
+      "no-var": "error",
+      "accessor-pairs": ["error", { "setWithoutGet": true, "enforceForClassMembers": true }],
+      "array-bracket-spacing": ["error", "never"],
+      "comma-dangle": ["error", {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "always-multiline"
+      }],
+      "arrow-spacing": "error",
+      "no-unused-vars": "error",
+      "no-label-var": "error",
+      "no-underscore-dangle": "off",
+      "object-curly-spacing": ["error", "always"],
+      "object-curly-newline": "error",
+      "no-eq-null": "error",
+      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
+      "no-return-assign": "off",
+      "no-trailing-spaces": "error",
+      "no-case-declarations": "off",
+      "consistent-return": "off",
+      "comma-spacing": "error",
+      "no-duplicate-imports": "error",
+      "sort-imports": "error",
+      "linebreak-style": "off",
+      "max-len": ["error", 130, 2, { "ignoreComments": false, "ignoreTemplateLiterals": true, "ignoreStrings": false }],
+      "no-multi-spaces": "error",
+      "no-mixed-spaces-and-tabs": "error",
+      "no-tabs": "error",
+      "indent": ["error", 2, {
+        "SwitchCase": 1,
+        "VariableDeclarator": 1,
+        "outerIIFEBody": 1,
+        "MemberExpression": 1,
+        "FunctionDeclaration": { "parameters": 1, "body": 1 },
+        "FunctionExpression": { "parameters": 1, "body": 1 },
+        "CallExpression": { "arguments": 1 },
+        "ArrayExpression": 1,
+        "ObjectExpression": 1,
+        "ImportDeclaration": 1,
+        "flatTernaryExpressions": false,
+        "ignoreComments": false,
+        "ignoredNodes": ["TemplateLiteral *", "JSXElement", "JSXElement > *", "JSXAttribute", "JSXIdentifier", "JSXNamespacedName", "JSXMemberExpression", "JSXSpreadAttribute", "JSXExpressionContainer", "JSXOpeningElement", "JSXClosingElement", "JSXFragment", "JSXOpeningFragment", "JSXClosingFragment", "JSXText", "JSXEmptyExpression", "JSXSpreadChild"],
+        "offsetTernaryExpressions": true
+      }],
+      "arrow-parens": ["error", "as-needed", { "requireForBlockBody": true }],
+      "curly": ["error", "all"]
+    }
+
+  }

@@ -61,7 +61,7 @@ stateForm.hiddenText.visibleStyle = stateForm.hiddenText.styles[0];
 
 // SYNCHRONIZERS
 
-const synchronizeLogicalOperatorsSelectorsDOMwithStateForm = elementId => {
+const synchronizeLogicalOperatorsSelectorsDOMwithStateForm = (elementId) => {
   //console.log(`synchronizing selector ${elementId} with state`);
 
   const { logicalOperators } = stateForm;
@@ -71,7 +71,7 @@ const synchronizeLogicalOperatorsSelectorsDOMwithStateForm = elementId => {
   //console.log(stateForm);
 };
 
-const synchronizeSelectorsDOMwithStateForm = elementId => {
+const synchronizeSelectorsDOMwithStateForm = (elementId) => {
   //console.log(`synchronizing selector ${elementId} with state`);
 
   const { fieldNames } = stateForm;
@@ -83,7 +83,7 @@ const synchronizeSelectorsDOMwithStateForm = elementId => {
   //console.log(stateForm);
 };
 
-const synchronizeCheckboxesDOMwithStateForm = elementId => {
+const synchronizeCheckboxesDOMwithStateForm = (elementId) => {
   //console.log(`synchronizing checkbox ${elementId} with state`);
   const { checkboxes } = stateForm;
   const idx = checkboxes.findIndex(checkbox => checkbox.id == elementId);
@@ -91,7 +91,7 @@ const synchronizeCheckboxesDOMwithStateForm = elementId => {
   //console.log(stateForm);
 };
 
-const synchronizeInputDOMwithStateForm = elementId => {
+const synchronizeInputDOMwithStateForm = (elementId) => {
   //console.log(`synchronizing input ${elementId} with state`);
 
   if (elementId == 'excludeParameters') {
@@ -137,11 +137,11 @@ const initializeForm = () => {
   getElement(stateForm.hiddenText.id).style.display =
     stateForm.hiddenText.visibleStyle;
 
-  stateForm.checkboxes.forEach(checkbox => {
+  stateForm.checkboxes.forEach((checkbox) => {
     getElement(checkbox.id).checked = checkbox.selected;
   });
 
-  stateForm.fieldNames.forEach(fieldName => {
+  stateForm.fieldNames.forEach((fieldName) => {
     getElement(fieldName.id).value = fieldName.value;
   });
 
@@ -152,7 +152,7 @@ initializeForm();
 
 synchronizeAll();
 
-const setClassRedBorderLight = element => {
+const setClassRedBorderLight = (element) => {
   const { invalidFieldsData } = stateForm;
 
   if (!element.classList.contains('red-border')) {
@@ -165,7 +165,7 @@ const setClassRedBorderLight = element => {
 
   setVisibilityCorrectionText();
 };
-const removeClassRedBorderLight = element => {
+const removeClassRedBorderLight = (element) => {
   const { invalidFieldsData } = stateForm;
 
   if (element.classList.contains('red-border')) {
@@ -183,7 +183,7 @@ const setVisibilityCorrectionText = () => {
   let isFormValid = true;
   const { hiddenText, invalidFieldsData } = stateForm;
   if (invalidFieldsData.length >= 1) {
-    invalidFieldsData.forEach(field => {
+    invalidFieldsData.forEach((field) => {
       if (field) {
         isFormValid = false;
       }
@@ -212,7 +212,7 @@ const formObjectFromStateToRequest = () => {
   );
   operators.push(stateForm.logicalOperators.currentValue);
   if (countCheckedCheckBoxes() > 0) {
-    stateForm.checkboxes.forEach(checkbox => {
+    stateForm.checkboxes.forEach((checkbox) => {
       if (checkbox.selected) {
         if (checkbox.relatedFieldId == 'excludeParameters') {
           excludes = stateForm.excludeParameters.values;
@@ -249,8 +249,8 @@ const synchronizeTimeOpt = () => {
   }
 
   SupportPageController.callPopUp(
-    `Ошибка`,
-    `Ни одно из полей времени не заполнено для синхронизации`,
+    'Ошибка',
+    'Ни одно из полей времени не заполнено для синхронизации',
     5000,
     'red',
   );
@@ -271,8 +271,8 @@ const shiftTimeOpt = (elementId, key) => {
       }
     } else {
       SupportPageController.callPopUp(
-        `Ошибка`,
-        `Невалидное значение времени`,
+        'Ошибка',
+        'Невалидное значение времени',
         5000,
         'red',
       );
@@ -289,8 +289,8 @@ const shiftTimeOpt = (elementId, key) => {
 };
 
 const cleanTimeOpt = () => {
-  getElement('end').value = ``;
-  getElement('start').value = ``;
+  getElement('end').value = '';
+  getElement('start').value = '';
   synchronizeInputDOMwithStateForm('start');
   synchronizeInputDOMwithStateForm('end');
 };
@@ -300,7 +300,7 @@ const cleanTimeOpt = () => {
 const countCheckedCheckBoxes = () => {
   let counter = 0;
   const { checkboxes } = stateForm;
-  checkboxes.forEach(checkbox => {
+  checkboxes.forEach((checkbox) => {
     if (checkbox.selected) {
       counter++;
     }
@@ -311,14 +311,14 @@ const countCheckedCheckBoxes = () => {
 const validateCheckBoxRelatedFields = () => {
   let isCheckBoxesValid = true;
   const { checkboxes } = stateForm;
-  checkboxes.forEach(checkbox => {
+  checkboxes.forEach((checkbox) => {
     if (checkbox.selected) {
       if (checkbox.relatedFieldId == 'excludeParameters') {
         if (
           stateForm.excludeParameters.values.length >= 1 &&
           stateForm.excludeParameters.values[0]
         ) {
-          console.log(`excludeParameters check` + '\n');
+          console.log('excludeParameters check' + '\n');
           console.log(
             `isCheckBoxesValid within loop before change: ${isCheckBoxesValid}`,
           );
@@ -333,7 +333,7 @@ const validateCheckBoxRelatedFields = () => {
         }
       } else {
         console.log(
-          `else condition (checkbox.relatedFieldId == 'excludeParameters')` +
+          'else condition (checkbox.relatedFieldId == \'excludeParameters\')' +
             '\n',
         );
         console.log(checkbox.relatedFieldId);
@@ -371,8 +371,8 @@ const validateDateFieldsForm = () => {
       isValid = true;
     } else {
       SupportPageController.callPopUp(
-        `Ошибка`,
-        `Невалидный формат даты`,
+        'Ошибка',
+        'Невалидный формат даты',
         3000,
         'red',
       );
@@ -393,19 +393,19 @@ const validateKibanaSearchForm = async () => {
   const { mainOrCondition, mainOrCondition2, mainOrCondition3 } = stateForm;
   if (validateCheckBoxRelatedFields() && validateDateFieldsForm()) {
     if (countCheckedCheckBoxes() == 0) {
-      stateForm.checkboxes.forEach(checkbox => {
+      stateForm.checkboxes.forEach((checkbox) => {
         removeClassRedBorderLight(getElement(checkbox.relatedFieldId));
       });
       if (mainOrCondition || mainOrCondition2 || mainOrCondition3) {
         //call ELK
         let request = formObjectFromStateToRequest();
-        console.log(`result request to ELK is:` + '\n');
+        console.log('result request to ELK is:' + '\n');
         console.log(request);
         try {
           await SupportPageController.getELKlogsOpt(request);
         } catch (e) {
           SupportPageController.callPopUp(
-            `Ошибка`,
+            'Ошибка',
             `Во время обработки запроса произошла ошибка ${e}`,
             5000,
             'red',
@@ -422,8 +422,8 @@ const validateKibanaSearchForm = async () => {
           ? removeClassRedBorderLight(getElement('mainOrCondition3'))
           : setClassRedBorderLight(getElement('mainOrCondition3'));
         SupportPageController.callPopUp(
-          `Ошибка`,
-          `Не заполнено одно или несколько обязательных полей`,
+          'Ошибка',
+          'Не заполнено одно или несколько обязательных полей',
           5000,
           'red',
         );
@@ -431,12 +431,12 @@ const validateKibanaSearchForm = async () => {
     } else {
       try {
         let request = formObjectFromStateToRequest();
-        console.log(`result request to ELK is:` + '\n');
+        console.log('result request to ELK is:' + '\n');
         console.log(request);
         await SupportPageController.getELKlogsOpt(request);
       } catch (e) {
         SupportPageController.callPopUp(
-          `Ошибка`,
+          'Ошибка',
           `Во время обработки запроса произошла ошибка ${e}`,
           5000,
           'red',
@@ -445,8 +445,8 @@ const validateKibanaSearchForm = async () => {
     }
   } else {
     SupportPageController.callPopUp(
-      `Ошибка`,
-      `Не заполнено одно или несколько обязательных полей`,
+      'Ошибка',
+      'Не заполнено одно или несколько обязательных полей',
       5000,
       'red',
     );

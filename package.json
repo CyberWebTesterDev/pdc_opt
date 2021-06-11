@@ -62,7 +62,11 @@
   },
   "deprecated": false,
   "description": "db connection app",
-  "devDependencies": {},
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.26.1",
+    "@typescript-eslint/parser": "^4.26.1",
+    "typescript": "^4.3.2"
+  },
   "keywords": [
     "app"
   ],

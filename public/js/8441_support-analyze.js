@@ -26,12 +26,11 @@ class AnalyzeSupport {
 
     this.analyzeTasks = () => {
       let taskTable = document.getElementById('processData');
-      let archTaskTable = document.getElementById('tasksArchData');
       let rowsCount;
       let tdCount;
       let tableId;
       if (taskTable) {
-        console.log(`Process is active` + '\n');
+        console.log('Process is active' + '\n');
 
         tableId = 'processData';
         rowsCount = document.querySelector('#processData > tbody').children
@@ -39,7 +38,7 @@ class AnalyzeSupport {
         tdCount = document.querySelector('#processData > tbody').children[1]
           .children.length;
       } else {
-        console.log(`No active processes` + '\n');
+        console.log('No active processes' + '\n');
         tableId = 'tasksArchData';
         rowsCount = document.querySelector('#tasksArchData > tbody').children
           .length;
@@ -130,7 +129,7 @@ class AnalyzeSupport {
         }
       }
 
-      console.log(`applicationState: ` + '\n');
+      console.log('applicationState: ' + '\n');
       console.log(this.applicationState);
     };
 
@@ -189,25 +188,25 @@ class AnalyzeSupport {
                   this.applicationState.tasks.currentActivityState
                     .stateDescription
                 }</div>
-                <div class="w-100"></div> 
+                <div class="w-100"></div>
                 <div class="col gray-border">Последняя задача в ошибке</div>
                 <div class="col gray-border light-green">${
                   this.applicationState.tasks.errorActivityState
                     .currentErrorAtivityName
                 }</div>
-                <div class="w-100"></div> 
+                <div class="w-100"></div>
                 <div class="col gray-border">Количество зависаний заявки</div>
                 <div class="col gray-border light-green">${
                   this.applicationState.tasks.currentActivityState
                     .intermediateStateCounter
                 }</div>
-                <div class="w-100"></div> 
+                <div class="w-100"></div>
                 <div class="col gray-border">Количество завершенных с ошибкой задач</div>
                 <div class="col gray-border light-green">${
                   this.applicationState.tasks.errorActivityState
                     .errorStateEntryCounter
                 }</div>
-                <div class="w-100"></div> 
+                <div class="w-100"></div>
                 <div class="col gray-border">Имя задач(и), завершенных(ой) с ошибкой в порядке убывания</div>
                 <div class="col gray-border light-green">${
                   this.applicationState.tasks.errorActivityState.errorActivities
@@ -216,7 +215,7 @@ class AnalyzeSupport {
                 <div class="col gray-border">Есть ли в интеграционных логах ошибка?</div>
                 <div class="col gray-border light-green">${
                   this.applicationState.isIntegrationError ? 'Да' : 'Нет'
-                }</div>    
+                }</div>
             </div>
         </div>`;
     };

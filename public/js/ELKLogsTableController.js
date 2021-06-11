@@ -48,10 +48,10 @@ class ELKLogsTableController {
       this.logsTableState.trsToRender = this.getSpecificRowsArrayByParameterValue();
       this.collapseShowTrDOMByFilteredArray();
       this.makeFilterOptions('clean');
-      console.log(`State has been reinitialized`);
+      console.log('State has been reinitialized');
     } else {
       console.log(
-        `State has NOT been reinitialized because it was not initialized first`,
+        'State has NOT been reinitialized because it was not initialized first',
       );
     }
   };
@@ -107,9 +107,9 @@ class ELKLogsTableController {
       this.collapseShowTrDOMByFilteredArray();
       this._fillWithDataBodyRowsArrayFromELKLogsTable();
       this.isInitialized = true;
-      console.log(`ELKLogsTableController: the state has been initialized`);
+      console.log('ELKLogsTableController: the state has been initialized');
     } else {
-      console.log(`ELKLogsTableController: the initial state already exists`);
+      console.log('ELKLogsTableController: the initial state already exists');
     }
   };
 
@@ -118,7 +118,7 @@ class ELKLogsTableController {
   };
 
   collapseShowTrDOMByFilteredArray = () => {
-    console.log(`collapseShowTrDOMByFilteredArray: current state: `);
+    console.log('collapseShowTrDOMByFilteredArray: current state: ');
     console.log(this.getCurrentState());
     if (this.getCurrentState().isRenderFiltered) {
       const excludeFlag = document.getElementById('excludeFlgELKFilter')
@@ -152,8 +152,8 @@ class ELKLogsTableController {
   getSpecificRowsArrayByParameterValue = (parameterValue) => {
     return parameterValue
       ? this.logsTableState.bodyRowsArray.filter(
-          cell => cell.parameterValue == parameterValue,
-        )
+        cell => cell.parameterValue == parameterValue,
+      )
       : this.logsTableState.bodyRowsArray;
   };
 
@@ -161,7 +161,7 @@ class ELKLogsTableController {
     parameterValue = null,
     parameterName,
   ) => {
-    return this.logsTableState.bodyRowsArray.filter(cell => {
+    return this.logsTableState.bodyRowsArray.filter((cell) => {
       if (
         cell.parameterValue == parameterValue &&
         cell.parameterName == parameterName
@@ -200,7 +200,7 @@ class ELKLogsTableController {
           `getTargetsToRenderByParameterValue: current log set has already been filtered by value: ${parameterValue}`,
         );
         console.log(
-          `getTargetsToRenderByParameterValue: starting to delete current render filter`,
+          'getTargetsToRenderByParameterValue: starting to delete current render filter',
         );
         this.logsTableState.isRenderFiltered = false;
         this.logsTableState.trsToRender = this.getSpecificRowsArrayByParameterValue();
@@ -234,7 +234,7 @@ class ELKLogsTableController {
           `getTargetsToRenderByParameterValue: current log set has already been filtered by value: ${parameterValue}`,
         );
         console.log(
-          `getTargetsToRenderByParameterValue: starting to delete current render filter`,
+          'getTargetsToRenderByParameterValue: starting to delete current render filter',
         );
         this.logsTableState.isRenderFiltered = false;
         this.logsTableState.trsToRender = this.getSpecificRowsArrayByParameterValue();
@@ -245,7 +245,7 @@ class ELKLogsTableController {
     if (!parameterValue) {
       //если не передано значение параметра выполнить сброс фильтра
       console.log(
-        `getTargetsToRenderByParameterValue: starting to clean current render filter`,
+        'getTargetsToRenderByParameterValue: starting to clean current render filter',
       );
       this.logsTableState.isRenderFiltered = false;
       this.logsTableState.trsToRender = this.getSpecificRowsArrayByParameterValue();
@@ -282,7 +282,7 @@ class ELKLogsTableController {
           this.logsTableState.trsToRender = trsToRender;
           this.logsTableState.isRenderFiltered = true;
           console.log(
-            `getTargetsToRenderByParameterValueOpt: filtered array: `,
+            'getTargetsToRenderByParameterValueOpt: filtered array: ',
           );
           console.log(trsToRender);
           collapseShowTrDOMByFilteredArray();
@@ -293,7 +293,7 @@ class ELKLogsTableController {
             2000,
           );
           console.log(
-            `getTargetsToRenderByParameterValueOpt: filter has not been established`,
+            'getTargetsToRenderByParameterValueOpt: filter has not been established',
           );
           this.logsTableState.isRenderFiltered = false;
           collapseShowTrDOMByFilteredArray();
@@ -307,7 +307,7 @@ class ELKLogsTableController {
           this.logsTableState.trsToRender = trsToRender;
           this.logsTableState.isRenderFiltered = true;
           console.log(
-            `getTargetsToRenderByParameterValueOpt: filtered array: `,
+            'getTargetsToRenderByParameterValueOpt: filtered array: ',
           );
           console.log(trsToRender);
           collapseShowTrDOMByFilteredArray();
@@ -318,7 +318,7 @@ class ELKLogsTableController {
             2000,
           );
           console.log(
-            `getTargetsToRenderByParameterValueOpt: filter has not been established`,
+            'getTargetsToRenderByParameterValueOpt: filter has not been established',
           );
           this.logsTableState.isRenderFiltered = false;
           collapseShowTrDOMByFilteredArray();
@@ -329,7 +329,7 @@ class ELKLogsTableController {
       this.logsTableState.trsToRender = getSpecificRowsArrayByParameterValue();
       collapseShowTrDOMByFilteredArray();
       console.log(
-        `Значение параметра для фильтрации не было задано! Фильтр очищен`,
+        'Значение параметра для фильтрации не было задано! Фильтр очищен',
       );
     }
   };
@@ -370,42 +370,11 @@ const handleInstanceController = (
   console.log(
     `handleInstanceController: key is: ${key}, parameterName: ${parameterName}`,
   );
-  console.log(`ELKLogsTableController: current state: `);
+  console.log('ELKLogsTableController: current state: ');
   console.log(elkController.getCurrentState());
   if (isCheckBox) {
     elkController.getTargetsToRenderByParameterValueOpt(key, parameterName);
   } else {
     elkController.getTargetsToRenderByParameterValueOpt();
   }
-};
-
-const onChangeListener = checkBoxNode => {
-  console.log(`Catched event with parameter: ${checkBoxNode.checked}`);
-  if (checkBoxNode.checked) {
-    if (document.getElementById('filter-kibana-logs').value) {
-      elkController.getTargetsToRenderByParameterValueOpt();
-      handleInstanceController(
-        true,
-        document.getElementById('filter-kibana-logs').value,
-        'app_name',
-      );
-    } else {
-      elkController.getTargetsToRenderByParameterValueOpt();
-    }
-  } else {
-    if (document.getElementById('filter-kibana-logs').value) {
-      elkController.getTargetsToRenderByParameterValueOpt();
-      handleInstanceController(
-        true,
-        document.getElementById('filter-kibana-logs').value,
-        'app_name',
-      );
-    } else {
-      elkController.getTargetsToRenderByParameterValueOpt();
-    }
-  }
-};
-
-const synchronizeStateWithDOM = () => {
-  elkController.reInitializeState();
 };

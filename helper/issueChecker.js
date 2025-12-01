@@ -1,39 +1,39 @@
-const { loggerServer } = require("./logger");
+const { loggerServer } = require('./logger');
 
 exports.consumerIssueValidationCheck = (
   { appStatus, appSaleChannel, formTypeId, dateSign, issueChannel },
-  statusViewData
+  statusViewData,
 ) => {
-  loggerServer(`consumerIssueValidationCheck entry with params`);
+  loggerServer('consumerIssueValidationCheck entry with params');
   console.log(appStatus, appSaleChannel, formTypeId, dateSign, issueChannel);
 
   const issueStatusesEntries = statusViewData.filter(
-    status => status.status_name == "Выдача кредита"
+    status => status.status_name == 'Выдача кредита',
   );
 
-  const idx = statusViewData.findIndex(status => status.status_name == "Ошибка");
+  const idx = statusViewData.findIndex(status => status.status_name == 'Ошибка');
 
   if (issueStatusesEntries.length > 0) {
-    const errorStatusesEntries = statusViewData.filter(status => status.status_name == "Ошибка");
+    const errorStatusesEntries = statusViewData.filter(status => status.status_name == 'Ошибка');
 
-    loggerServer(`consumerIssueValidationCheck: issue bug has been detected`);
+    loggerServer('consumerIssueValidationCheck: issue bug has been detected');
 
     let contractValidDurationDays = 0;
 
     if (
-      appSaleChannel == "719a2114-616a-43c0-8dee-f527738782fa" ||
-      appSaleChannel == "a1add094-45ba-46e7-b862-0b1bca05daa8" ||
-      appSaleChannel == "87c2f9f2-a420-46ba-9050-6140e4b92797" ||
-      appSaleChannel == "d7901347-1c78-4f4c-b237-e5563130c7b5"
+      appSaleChannel == '719a2114-616a-43c0-8dee-f527738782fa' ||
+      appSaleChannel == 'a1add094-45ba-46e7-b862-0b1bca05daa8' ||
+      appSaleChannel == '87c2f9f2-a420-46ba-9050-6140e4b92797' ||
+      appSaleChannel == 'd7901347-1c78-4f4c-b237-e5563130c7b5'
     ) {
-      if (issueChannel == "МБ") {
+      if (issueChannel == 'МБ') {
         contractValidDurationDays = 5;
       } else {
-        contractValidDurationDays = formTypeId == "Короткая" ? 3 : 5;
+        contractValidDurationDays = formTypeId == 'Короткая' ? 3 : 5;
       }
     }
 
-    if (appSaleChannel == "e7f7c10c-968e-4276-851d-2a1d9e6464f2") {
+    if (appSaleChannel == 'e7f7c10c-968e-4276-851d-2a1d9e6464f2') {
       contractValidDurationDays = 5;
     }
 
@@ -66,7 +66,7 @@ exports.consumerIssueValidationCheck = (
 
     const additionalSupportData = {
       issueBugFlag: true,
-      errorFlag: appStatus == "Ошибка" ? true : false,
+      errorFlag: appStatus == 'Ошибка' ? true : false,
       errorStatusEntryCounter:
         errorStatusesEntries.length > 0 ? errorStatusesEntries.length - 1 : 0,
       issueStatusEntryCounter: issueStatusesEntries.length - 1,
@@ -90,7 +90,7 @@ exports.consumerIssueValidationCheck = (
         statusViewData[statusViewData.length - 2].u_login
       } (${statusViewData[statusViewData.length - 2].u_role})`,
       contractDateSign: dateSign,
-      contractValidDurationDays
+      contractValidDurationDays,
     };
 
     //loggerServer(`consumerIssueValidationCheck: returning additionalSupportData`);
@@ -99,10 +99,10 @@ exports.consumerIssueValidationCheck = (
     return additionalSupportData;
   }
 
-  if (appStatus == "Ошибка") {
-    loggerServer(`consumerIssueValidationCheck: non issue bug has been detected`);
+  if (appStatus == 'Ошибка') {
+    loggerServer('consumerIssueValidationCheck: non issue bug has been detected');
 
-    const errorStatusesEntries = statusViewData.filter(status => status.status_name == "Ошибка");
+    const errorStatusesEntries = statusViewData.filter(status => status.status_name == 'Ошибка');
 
     if (errorStatusesEntries.length > 0) {
       return {
@@ -113,14 +113,109 @@ exports.consumerIssueValidationCheck = (
         lastErrorEntryDateTime: errorStatusesEntries[errorStatusesEntries.length - 1].start_date,
         employeeRetry: `${statusViewData[statusViewData.length - 2].u_fio} ${
           statusViewData[statusViewData.length - 2].u_login
-        } (${statusViewData[statusViewData.length - 2].u_role})`
+        } (${statusViewData[statusViewData.length - 2].u_role})`,
       };
     }
   }
 
-  loggerServer(`consumerIssueValidationCheck: no bug has been detected`);
+  loggerServer('consumerIssueValidationCheck: no bug has been detected');
 
   return {
-    issueBugFlag: false
+    issueBugFlag: false,
   };
+};
+
+exports.consumerIssueValidationCheckOpt = async ({
+  appStatus,
+  appSaleChannel,
+  formTypeId,
+  dateSign,
+  issueChannel,
+}, statusViewData) => {
+  loggerServer('consumerIssueValidationCheck entry with params');
+  console.log({ appStatus, appSaleChannel, formTypeId, dateSign, issueChannel });
+
+  const getContractValidDuration = () => {
+    if (
+      ['719a2114-616a-43c0-8dee-f527738782fa',
+        'a1add094-45ba-46e7-b862-0b1bca05daa8',
+        '87c2f9f2-a420-46ba-9050-6140e4b92797',
+        'd7901347-1c78-4f4c-b237-e5563130c7b5'].includes(appSaleChannel)
+    ) {
+      return issueChannel === 'МБ' ? 5 : (formTypeId === 'Короткая' ? 3 : 5);
+    }
+
+    if (appSaleChannel === 'e7f7c10c-968e-4276-851d-2a1d9e6464f2') {
+      return 5;
+    }
+
+    return 0;
+  };
+
+  const calculateDateDifference = (startDate) => {
+    const now = new Date();
+    const start = new Date(startDate);
+    const diff = now - start;
+
+    return {
+      minutes: (diff / 60000).toFixed(2),
+      hours: (diff / 3600000).toFixed(1),
+      days: (diff / 86400000).toFixed(1),
+    };
+  };
+
+  const formatDateDifference = (diff) => {
+    return `${diff.days} дней или ${diff.hours} часов или ${diff.minutes} минут`;
+  };
+
+  const issueStatuses = statusViewData.filter(status => status.status_name === 'Выдача кредита');
+  const errorStatuses = statusViewData.filter(status => status.status_name === 'Ошибка');
+  const lastStatus = statusViewData[statusViewData.length - 1];
+  const errorIndex = statusViewData.findIndex(status => status.status_name === 'Ошибка');
+
+  if (issueStatuses.length > 0) {
+    loggerServer('consumerIssueValidationCheck: issue bug has been detected');
+
+    const contractValidDurationDays = getContractValidDuration(appSaleChannel, issueChannel, formTypeId);
+    const dateDiff = calculateDateDifference(dateSign);
+    const lastStatusDiff = calculateDateDifference(lastStatus.start_date);
+
+    const additionalSupportData = {
+      issueBugFlag: true,
+      errorFlag: appStatus === 'Ошибка',
+      errorStatusEntryCounter: errorStatuses.length - 1,
+      issueStatusEntryCounter: issueStatuses.length - 1,
+      dateDifferenceBetweenSignAndNow: dateDiff,
+      firstIssueEntryDateTime: issueStatuses[0].start_date,
+      lastIssueEntryDateTime: issueStatuses[issueStatuses.length - 1].start_date,
+      firstErrorEntryDateTime: errorStatuses[0]?.start_date,
+      firstErrorTryDateTime: errorIndex !== -1 ? statusViewData[errorIndex + 1]?.start_date : null,
+      lastErrorEntryDateTime: errorStatuses[errorStatuses.length - 1]?.start_date,
+      isContractOutDated: contractValidDurationDays - dateDiff.days <= 0,
+      dateDifferenceBetweenLastStatus: formatDateDifference(lastStatusDiff),
+      employeeRetry: `${lastStatus.u_fio} ${lastStatus.u_login} (${lastStatus.u_role})`,
+      contractDateSign: dateSign,
+      contractValidDurationDays,
+    };
+
+    return additionalSupportData;
+  }
+
+  if (appStatus === 'Ошибка') {
+    loggerServer('consumerIssueValidationCheck: non issue bug has been detected');
+
+    if (errorStatuses.length > 0) {
+      return {
+        issueBugFlag: false,
+        errorFlag: true,
+        errorStatusEntryCounter: errorStatuses.length,
+        firstErrorEntryDateTime: errorStatuses[0].start_date,
+        lastErrorEntryDateTime: errorStatuses[errorStatuses.length - 1].start_date,
+        employeeRetry: `${statusViewData[statusViewData.length - 2].u_fio} ${statusViewData[statusViewData.length - 2].u_login} (${statusViewData[statusViewData.length - 2].u_role})`,
+      };
+    }
+  }
+
+  loggerServer('consumerIssueValidationCheck: no bug has been detected');
+  return { issueBugFlag: false };
 };

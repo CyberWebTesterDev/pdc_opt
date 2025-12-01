@@ -1,7 +1,7 @@
 const { currentDomainUserData } = require('../environment/auth-data');
 const { environmentConfiguration } = require('../configs/env-configs');
 
-exports.makeElkReqLogJSONStr = params => {
+exports.makeElkReqLogJSONStr = (params) => {
   return `{
         "version": true,
         "size": 500,
@@ -151,8 +151,8 @@ const auth = `Basic ${Buffer.from(
 
 exports.options = {
   hostname: `kibana${environmentConfiguration.main_prod_domain_name}`,
-  path: `api/console/proxy?path=_search&method=GET`,
-  method: `POST`,
+  path: 'api/console/proxy?path=_search&method=GET',
+  method: 'POST',
   headers: {
     'Content-type': 'application/json;charset=utf-8',
     'kbn-xsrf': 'reporting',
@@ -258,15 +258,15 @@ exports.makeELKrequestFlexExtended = (
   operators = [],
 ) => {
   console.log(
-    `makeELKrequestFlexExtended: received request for ELK template request generation` +
+    'makeELKrequestFlexExtended: received request for ELK template request generation' +
       '\n',
   );
 
   let generateParamsTemplate = () => {
-    let base = ``;
+    let base = '';
 
     if (params.length > 0) {
-      let paramCondition = ``;
+      let paramCondition = '';
 
       let hasNotDateParams = false;
 
@@ -293,17 +293,15 @@ exports.makeELKrequestFlexExtended = (
           //console.log(`makeELKrequestFlexExtended: 1st condition param ? = true, param: ${param}, index: ${i}`+'\n');
 
           if (!Date.parse(param)) {
-            //console.log(`makeELKrequestFlexExtended: 2st condition !Date.parse(param) ? = true, param: ${param}, index: ${i}`+'\n');
 
             if (i == params.length - 1) {
-              //console.log(`makeELKrequestFlexExtended: 3rd condition i == params.length - 1 ? = true, param: ${param}, index: ${i}`+'\n');
 
               paramCondition += `{
                   "match_phrase": {
                   "message": "${param}"}
                 }`;
             } else {
-              //console.log(`makeELKrequestFlexExtended: 3rd condition i == params.length - 1 ? = false, param: ${param}, index: ${i}`+'\n');
+
               paramCondition += `{
                   "match_phrase": {
                   "message": "${param}"}
@@ -412,9 +410,9 @@ exports.makeELKrequestFlexExtended = (
   };
 
   let generateFildsConditionsTemplate = () => {
-    let base = ``;
-    let fieldsConditionTemplate = ``;
-    let fieldsAndConditionTemplate = ``;
+    let base = '';
+    let fieldsConditionTemplate = '';
+    let fieldsAndConditionTemplate = '';
     let isBoolAndOperator = false;
 
     if (fieldNames.length > 0 && fieldNames.length == fieldValues.length) {
@@ -570,7 +568,7 @@ exports.makeELKrequestFlexExtended = (
   };
 
   let aggregateMainTemplate = () => {
-    let baseMainTemplate = ``;
+    let baseMainTemplate = '';
 
     baseMainTemplate = `${generateHeadTemplate()}
       "filter": [
@@ -584,7 +582,7 @@ exports.makeELKrequestFlexExtended = (
       `;
 
     console.log(
-      `makeELKrequestFlexExtended.aggregateMainTemplate: template has been generated: ` +
+      'makeELKrequestFlexExtended.aggregateMainTemplate: template has been generated: ' +
         '\n',
     );
     return baseMainTemplate;
@@ -595,7 +593,7 @@ exports.makeELKrequestFlexExtended = (
 
 exports.makeELKrequestFlexExtendedOpt = (request = {}) => {
   console.log(
-    `makeELKrequestFlexExtendedOpt: received request for ELK template request generation` +
+    'makeELKrequestFlexExtendedOpt: received request for ELK template request generation' +
       '\n',
   );
 
@@ -609,10 +607,10 @@ exports.makeELKrequestFlexExtendedOpt = (request = {}) => {
   } = request;
 
   let generateParamsTemplate = () => {
-    let base = ``;
+    let base = '';
 
     if (mainParameters.length > 0) {
-      let paramCondition = ``;
+      let paramCondition = '';
 
       mainParameters.forEach((param, i) => {
         if (param) {
@@ -634,7 +632,7 @@ exports.makeELKrequestFlexExtendedOpt = (request = {}) => {
             const idx = paramCondition.lastIndexOf(',');
             paramCondition = paramCondition.slice(0, idx);
           } else {
-            paramCondition += ``;
+            paramCondition += '';
           }
 
           // `{
@@ -708,9 +706,9 @@ exports.makeELKrequestFlexExtendedOpt = (request = {}) => {
   };
 
   let generateFildsConditionsTemplate = () => {
-    let base = ``;
-    let fieldsConditionTemplate = ``;
-    let fieldsAndConditionTemplate = ``;
+    let base = '';
+    let fieldsConditionTemplate = '';
+    let fieldsAndConditionTemplate = '';
     let isBoolAndOperator = false;
 
     if (fieldNames.length > 0 && fieldNames.length == fieldValues.length) {
@@ -805,7 +803,7 @@ exports.makeELKrequestFlexExtendedOpt = (request = {}) => {
   };
 
   let generateTailTemplate = () => {
-    let excludesTemplate = ``;
+    let excludesTemplate = '';
 
     if (excludeFieldNames[0] && excludes.length > 0) {
       excludes.forEach((exclude, i) => {
@@ -842,7 +840,7 @@ exports.makeELKrequestFlexExtendedOpt = (request = {}) => {
   };
 
   let aggregateMainTemplate = () => {
-    let baseMainTemplate = ``;
+    let baseMainTemplate = '';
 
     baseMainTemplate = `${generateHeadTemplate()}
       "filter": [
@@ -856,11 +854,151 @@ exports.makeELKrequestFlexExtendedOpt = (request = {}) => {
       `;
 
     console.log(
-      `makeELKrequestFlexExtended.aggregateMainTemplate: template has been generated: ` +
+      'makeELKrequestFlexExtended.aggregateMainTemplate: template has been generated: ' +
         '\n',
     );
     return baseMainTemplate;
   };
 
   return aggregateMainTemplate();
+};
+
+const generateELKTemplate = (request = {}) => {
+  const {
+    mainParameters,
+    fieldNames,
+    fieldValues,
+    operators,
+    excludeFieldNames,
+    excludes,
+  } = request;
+
+  const generateParamsTemplate = () => {
+    const paramConditions = mainParameters
+      .filter((param, i) => i !== 2 && i !== 3 && param)
+      .map(param => ({
+        match_phrase: { message: param },
+      }));
+
+    return paramConditions.length > 0
+      ? {
+          bool: {
+            should: paramConditions,
+            minimum_should_match: 1,
+          },
+        }
+      : null;
+  };
+
+  const generateTimeRangeTemplate = () => {
+    const [startParam, endParam] = mainParameters.slice(2, 4);
+    const start = Date.parse(startParam);
+    const end = Date.parse(endParam);
+
+    if (isNaN(start) || isNaN(end)) {
+      const now = new Date();
+      const startDate = new Date(now.setMinutes(now.getMinutes() - 1));
+      const endDate = new Date(now.setMinutes(now.getMinutes() + 1));
+      return {
+        range: {
+          '@timestamp': {
+            gte: startDate.toISOString(),
+            lte: endDate.toISOString(),
+            format: 'strict_date_optional_time',
+          },
+        },
+      };
+    }
+
+    return {
+      range: {
+        '@timestamp': {
+          gte: startParam,
+          lte: endParam,
+          format: 'strict_date_optional_time',
+        },
+      },
+    };
+  };
+
+  const generateFieldsConditionsTemplate = () => {
+    if (fieldNames.length !== fieldValues.length) {return null;}
+
+    const conditions = fieldNames.map((fieldName, i) => ({
+      match_phrase: { [fieldName]: fieldValues[i] },
+    }));
+
+    if (operators[0] === 'AND') {
+      return conditions.map(condition => ({
+        bool: {
+          should: [condition],
+          minimum_should_match: 1,
+        },
+      }));
+    }
+
+    return {
+      bool: {
+        should: conditions,
+        minimum_should_match: 1,
+      },
+    };
+  };
+
+  const generateExcludesTemplate = () => {
+    if (!excludeFieldNames[0] || excludes.length === 0) {return null;}
+
+    return excludes.map(exclude => ({
+      match_phrase: { [excludeFieldNames[0]]: exclude },
+    }));
+  };
+
+  const headTemplate = {
+    version: true,
+    size: 500,
+    sort: [{
+      '@timestamp': {
+        order: 'desc',
+        unmapped_type: 'boolean',
+      },
+    }],
+    aggs: {
+      '2': {
+        date_histogram: {
+          field: '@timestamp',
+          fixed_interval: '1s',
+          time_zone: 'Europe/Moscow',
+          min_doc_count: 1,
+        },
+      },
+    },
+    stored_fields: ['*'],
+    script_fields: {},
+    docvalue_fields: [
+      { field: '@timestamp', format: 'date_time' },
+      { field: 'timestamp', format: 'date_time' },
+    ],
+    _source: { excludes: [] },
+    query: {
+      bool: {
+        must: [],
+        should: [],
+        must_not: [],
+      },
+    },
+  };
+
+  const filters = [
+    { match_all: {} },
+    generateParamsTemplate(),
+    generateFieldsConditionsTemplate(),
+    generateTimeRangeTemplate(),
+  ].filter(Boolean);
+
+  headTemplate.query.bool.must_not = generateExcludesTemplate();
+
+  return {
+    ...headTemplate,
+    filter: filters,
+  };
 };

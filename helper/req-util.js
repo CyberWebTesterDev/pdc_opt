@@ -11,27 +11,27 @@ const authELK = async () => {
     const req = https.request(
       {
         hostname: `kibana${environmentConfiguration.main_prod_domain_name}`,
-        path: `/api/v1/auth/login`,
-        method: `POST`,
+        path: '/api/v1/auth/login',
+        method: 'POST',
         headers: {
           'Content-type': 'application/json;charset=utf-8',
           Authorization: auth,
           'kbn-xsrf': 'reporting',
         },
       },
-      res => {
-        console.log(`Sending POST for authorization in ELK`);
-        let data = ``;
+      (res) => {
+        console.log('Sending POST for authorization in ELK');
+        let data = '';
         console.log(`Status code: ${res.statusCode}`);
 
-        res.on('data', chunk => {
+        res.on('data', (chunk) => {
           data += chunk;
-          console.log(`Receiving data`);
+          console.log('Receiving data');
         });
 
         res.on('end', () => {
           console.log(
-            `postHttpsRequestPromise: Received response for auth` + '\n',
+            'postHttpsRequestPromise: Received response for auth' + '\n',
           );
           console.log(res.headers);
           if (
@@ -47,8 +47,8 @@ const authELK = async () => {
       },
     );
 
-    req.on('error', err => {
-      console.log(`postHttpsRequestPromise: Error`);
+    req.on('error', (err) => {
+      console.log('postHttpsRequestPromise: Error');
       console.log(err);
       reject(false);
     });
@@ -62,23 +62,23 @@ exports.postHttpsRequestPromise = (data, options) => {
   process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 
   return new Promise((resolve, reject) => {
-    const req = https.request(options, res => {
-      console.log(`Sending POST request`);
-      let data = ``;
+    const req = https.request(options, (res) => {
+      console.log('Sending POST request');
+      let data = '';
       console.log(`Status code: ${res.statusCode}`);
 
       if (res.statusCode == 400) {
-        console.log(`postHttpsRequestPromise: status in not ok` + '\n');
+        console.log('postHttpsRequestPromise: status in not ok' + '\n');
         reject(res.statusCode);
       }
 
-      res.on('data', chunk => {
+      res.on('data', (chunk) => {
         data += chunk;
         //console.log(`Receiving data`);
       });
 
       res.on('end', () => {
-        console.log(`postHttpsRequestPromise: Received response` + '\n');
+        console.log('postHttpsRequestPromise: Received response' + '\n');
         //console.log(res.headers);
         if (res.headers['content-type'] == 'application/json; charset=utf-8') {
           // if ( res.headers['set-cookie'] ) {
@@ -96,8 +96,8 @@ exports.postHttpsRequestPromise = (data, options) => {
       });
     });
 
-    req.on('error', err => {
-      console.log(`postHttpsRequestPromise: Error`);
+    req.on('error', (err) => {
+      console.log('postHttpsRequestPromise: Error');
       console.log(err);
       reject(err);
     });

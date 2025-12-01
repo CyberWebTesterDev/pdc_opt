@@ -561,6 +561,96 @@ app.get('/frontrequest/aggregatedatafromdb/:appnum', (req, res) => {
   }
 });
 
+function isValidAppNumber(appnum) {
+  return appnum.length === 10 && appnum && !isNaN(appnum);
+}
+
+// OPT [AIH]
+app.get('/frontrequest/aggregatedatafromdb/:appnum', async (req, res) => {
+  const { appnum } = req.params;
+  const ip1 = req.connection.remoteAddress;
+  const ip2 = req.header('x-forwarded-for') || req.connection.remoteAddress;
+  const dc = new DataCollector();
+
+  dc.loggerServer(`Received support request for application number ${appnum} from ${ip1}, ${ip2}`);
+  dc.loggerServer(`Headers: ${JSON.stringify(req.headers)}`);
+
+  if (!isValidAppNumber(appnum)) {
+    dc.loggerServer(`Bad application number ${appnum}`);
+    return res.send(`<h2>Ошибка в номере заявки ${appnum}! Введите корректный номер!</h2>`);
+  }
+
+  try {
+    const data = await dc.collectData(appnum);
+    const parsedData = JSON.parse(data);
+
+    dc.loggerServer(`Received data from dataCollector for application ${appnum}`);
+    const { credit_type_name: ctp } = parsedData.searchData[0];
+    const links = createLinks(appnum, ctp);
+
+    const renderData = {
+      appnum,
+      processData: parsedData.processData,
+      tasksData: parsedData.tasksData,
+      tasksArchData: parsedData.tasksArchData,
+      executionsLogData: parsedData.executionsLogData,
+      processLogData: parsedData.processLogData,
+      jobData: parsedData.jobData,
+      searchData: parsedData.searchData,
+      linkData: links
+    };
+
+    if (parsedData.tasksData.length !== 0 && parsedData.tasksData[0].Error) {
+      dc.loggerServer(`Application has error text attached: ${parsedData.tasksData[0].Error}`);
+    }
+
+    switch (ctp) {
+      case 'Ипотечное кредитование':
+        renderData.credit_type = 'mortgage';
+        renderData.mortgageParticipantsData = parsedData.mortgageParticipantsData;
+        renderData.mortgageAccountsData = parsedData.mortgageAccountsData;
+        renderData.mortgageRealEstateData = parsedData.mortgageRealEstateData;
+        renderData.mortgageRealEstateData2 = parsedData.mortgageRealEstateData2;
+        renderData.letterOfCreditData = parsedData.letterOfCreditData;
+        renderData.transferOrderData = parsedData.transferOrderData;
+        renderData.legalDocumentData = parsedData.legalDocumentData;
+        break;
+      case 'Потребительское кредитование':
+        renderData.credit_type = 'potreb';
+        renderData.consumerAccountsData = parsedData.consumerAccountsData;
+        renderData.consumerRefinData = parsedData.consumerRefinData;
+        renderData.consumerRefinAllData = parsedData.consumerRefinAllData;
+        break;
+      case 'Кредитование с использованием банковских карт':
+        renderData.credit_type = 'card';
+        renderData.cardAccountsData = parsedData.cardAccountsData;
+        renderData.contractCardData = parsedData.contractCardData;
+        break;
+      case 'Автокредитование':
+        renderData.credit_type = 'auto';
+        renderData.autoAccountsData = parsedData.autoAccountsData;
+        renderData.autoVehicleData = parsedData.autoVehicleData;
+        break;
+      default:
+        return res.status(400).send('Неизвестный тип кредита');
+    }
+
+    renderData.parametersData = parsedData.parametersData;
+    renderData.integrationLogData = parsedData.integrationLogData;
+    renderData.statusViewData = parsedData.statusViewData;
+    renderData.eventData = parsedData.eventData;
+
+    res.render(`Support2_${renderData.credit_type}`, renderData);
+    dc.loggerServer(`Data for application ${appnum} has been successfully processed for ${ip1}`);
+    dc.loggerServer('Listening...');
+  } catch (e) {
+    console.error(e);
+    res.send(
+       `<h1>При выполнении запроса произошла ошибка: <br></h1><h2><font color="red">${e}</font></h2>`
+    );
+  }
+});
+
 app.get('/frontrequest/aggregatedatafromdblight/:appnum', (req, res) => {
   const getSubString = () =>
     Math.floor((1 + Math.random()) * 0x10000)

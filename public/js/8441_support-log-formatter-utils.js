@@ -81,9 +81,9 @@ const cleanLogRegEx = (
     .replace(regex, '<')
     .replace(regex2, '>')
     .replace(regex3, '')
-    .replace(regex4_1, "'")
-    .replace(regex4, "'")
-    .replace(regex5, "'");
+    .replace(regex4_1, '\'')
+    .replace(regex4, '\'')
+    .replace(regex5, '\'');
 
   if (logType == 'Икар') {
     newStr = newStr.replace(regex6, '').replace(regex7, '');
@@ -121,7 +121,7 @@ const cleanLog = (targetElementId, logStr, logType = null) => {
   // }
 
   logCharArray.forEach((_, idx) => {
-    console.log(`cleanLog: starting to clean log data`);
+    console.log('cleanLog: starting to clean log data');
     if (logType == 'Икар') {
       if (idx > 3) {
         switch (
@@ -149,7 +149,7 @@ const cleanLog = (targetElementId, logStr, logType = null) => {
             logCharArrayCopy.splice(idx - 4, 5, '');
             break;
           case 'quot;':
-            logCharArrayCopy.splice(idx - 4, 5, "'");
+            logCharArrayCopy.splice(idx - 4, 5, '\'');
             break;
           default:
             break;
@@ -200,7 +200,7 @@ const cleanLog = (targetElementId, logStr, logType = null) => {
     cleanXMLLogEmptyStrings(logCharArrayCopy);
   }
 
-  console.log(`cleanLog: end of cleaning`);
+  console.log('cleanLog: end of cleaning');
 
   if (targetElementId) {
     console.log(
@@ -220,7 +220,7 @@ const cleanLog = (targetElementId, logStr, logType = null) => {
   }
 };
 
-const cleanXMLLogEmptyStrings = array => {
+const cleanXMLLogEmptyStrings = (array) => {
   array.forEach((char, idx) => {
     if (char == '') {
       array.splice(idx, 1);
@@ -228,7 +228,7 @@ const cleanXMLLogEmptyStrings = array => {
   });
 };
 
-const cleanXMLLogSpaces = array => {
+const cleanXMLLogSpaces = (array) => {
   array.forEach((char, idx) => {
     if (idx > 3) {
       if (array[idx - 1] == '>' && array[idx + 1] == '<' && array[idx] == ' ') {
@@ -238,7 +238,7 @@ const cleanXMLLogSpaces = array => {
   });
 };
 
-const cleanLogAmp = arr => {
+const cleanLogAmp = (arr) => {
   arr.forEach((char, idx) => {
     if (idx > 4) {
       if (
@@ -251,7 +251,7 @@ const cleanLogAmp = arr => {
   });
 };
 
-const getThreadBackGroundColorByAttributeValue = attributeValue => {
+const getThreadBackGroundColorByAttributeValue = (attributeValue) => {
   const color = document.querySelector(`[chainid="${attributeValue}"]`)
     .children[getCellIndexByColumnName('thread_name')].style.backgroundColor;
   return color;
@@ -268,7 +268,7 @@ const chainInfoWrapper = (HTMLtoWrap, chainName) => {
   )}">${HTMLtoWrap}</div>`;
 };
 
-const cleanToXmlParseLog = array => {
+const cleanToXmlParseLog = (array) => {
   let xmlEntryCounter = 0;
   let isReturnPresent = false;
 
@@ -286,7 +286,7 @@ const cleanToXmlParseLog = array => {
           array[idx - 3] +
           array[idx - 2] +
           array[idx - 1] +
-          array[idx] ==
+          array[idx] ===
           '<?xml' ||
         array[idx - 4] +
           array[idx - 3] +
@@ -318,7 +318,7 @@ const cleanToXmlParseLog = array => {
           array[idx] ==
         'return'
       )
-        isReturnPresent = true;
+      {isReturnPresent = true;}
     }
   });
   //проверяем есть ли тэг return в логе
@@ -344,6 +344,34 @@ const cleanToXmlParseLog = array => {
   return array;
 };
 
+const cleanToXmlParseLogOpt = (array) => {
+  // Преобразуем массив в строку для эффективного поиска
+  const str = array.join('');
+
+  // Ищем первое вхождение <?xml или ?xml
+  let xmlStartIndex = str.indexOf('<?xml');
+  if (xmlStartIndex === -1) {xmlStartIndex = str.indexOf('?xml');}
+
+  // Если нашли xml, ищем следующий экземпляр для обрезки
+  const nextXmlStartIndex = str.indexOf('<?xml', xmlStartIndex + 1);
+  if (nextXmlStartIndex !== -1) {
+    array = array.slice(nextXmlStartIndex - 4);
+  }
+
+  // Ищем тег return
+  const returnIndex = str.indexOf('return');
+
+  // Если тег return найден, ищем закрывающий /return
+  if (returnIndex !== -1) {
+    const endReturnIndex = str.indexOf('/return');
+    if (endReturnIndex !== -1) {
+      array = array.slice(0, endReturnIndex - 7);
+    }
+  }
+
+  return array;
+};
+
 const hideLargeLogs = () => {
   //метод для скрытия тяжеловесных логов
   SupportPageController.showLoaderFlex(
@@ -360,11 +388,11 @@ const hideLargeLogs = () => {
   if (elkTable) {
     //определяем индекс столбца с информацией о размере
     let index;
-    elkTable.childNodes.forEach(child => {
+    elkTable.childNodes.forEach((child) => {
       if (child.tagName == 'THEAD') {
-        child.childNodes.forEach(trChild => {
+        child.childNodes.forEach((trChild) => {
           if (trChild.tagName == 'TR') {
-            trChild.childNodes.forEach(thChild => {
+            trChild.childNodes.forEach((thChild) => {
               if (
                 thChild.tagName == 'TH' &&
                 thChild.innerText == 'message_size'
@@ -404,11 +432,15 @@ const hideLargeLogs = () => {
                   if (tdChild.classList.contains('longtext2-unwrapped')) {
                     tdChild.classList.remove('longtext2-unwrapped');
                     tdChild.classList.add('longtext2');
-                    tdChild.previousElementSibling.innerHTML = `<path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z"></path>`;
+                    tdChild.previousElementSibling.innerHTML = '<path d="M17,9.17a1,1,0'+
+                    ',0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,'+
+                    '1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z"></path>';
                   } else if (tdChild.classList.contains('longtext2')) {
                     tdChild.classList.remove('longtext2');
                     tdChild.classList.add('longtext2-unwrapped');
-                    tdChild.previousElementSibling.innerHTML = `<path d="M17,13.41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z"></path>`;
+                    tdChild.previousElementSibling.innerHTML = '<path d="M17,13.' +
+                    '41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,1' +
+                    ',0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z"></path>';
                   }
                 }
               }
@@ -444,34 +476,91 @@ const hideLargeLogs = () => {
   }
 };
 
-const getParametersFromLogs = logString => {
+const hideLargeLogsOpt = () => {
+  SupportPageController.showLoaderFlex('Обработка', 'Выполняется поиск тяжеловесных логов');
+
+  const elkTable = document.getElementById('elkData');
+  if (!elkTable) {
+    SupportPageController.callPopUp('', 'Не найдено таблицы логов ELK', 3000, '#511919');
+    return;
+  }
+
+  // Находим индекс столбца message_size
+  const messageSizeIndex = Array.from(elkTable.querySelector('thead tr').children)
+    .findIndex(th => th.textContent === 'message_size');
+
+  if (messageSizeIndex === -1) {
+    SupportPageController.callPopUp('', 'Не найден столбец message_size', 3000, '#511919');
+    return;
+  }
+
+  const largeLogsFound = [];
+
+  // Обработка строк таблицы
+  elkTable.querySelectorAll('tbody tr').forEach((tr) => {
+    const sizeCell = tr.children[messageSizeIndex];
+    const size = parseInt(sizeCell.textContent, 10);
+
+    if (size > 9718) {
+      largeLogsFound.push(tr);
+      tr.style.backgroundColor = '#1e3d46';
+      sizeCell.firstChild.style.color = '#e3743e';
+
+      const messageCell = tr.children[messageSizeIndex - 1];
+      const messageChild = messageCell.firstElementChild;
+
+      if (messageChild.classList.contains('longtext2-unwrapped')) {
+        messageChild.classList.remove('longtext2-unwrapped');
+        messageChild.classList.add('longtext2');
+        messageChild.previousElementSibling.innerHTML = `<path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,
+            0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z"></path>`;
+      } else if (messageChild.classList.contains('longtext2')) {
+        messageChild.classList.remove('longtext2');
+        messageChild.classList.add('longtext2-unwrapped');
+        messageChild.previousElementSibling.innerHTML = `<path d="M17,13.41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,
+            1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z"></path>`;
+      }
+    }
+  });
+
+  if (largeLogsFound.length === 0) {
+    SupportPageController.callPopUp('', 'Тяжеловесных логов не найдено', 3000);
+  }
+
+  setTimeout(() => {
+    SupportPageController.closeLoaderFlex();
+    SupportPageController.callPopUp('', 'Обработка завершена', 3000);
+  }, 2000);
+};
+
+const getParametersFromLogs = (_) => {
   const regExpForParams = /\w*\=.[^\,]*\,/g;
   const regExpForChainUIDFind = /chainRequestId\=.[^\,]+[^\,]/g;
   const regExpForClassNameFind = /defaultClassIdFieldName\=.[^\,]+[^\,]/g;
 
-  const getArrayOfParamsByLog = text => {
+  const getArrayOfParamsByLog = (text) => {
     const parametersList = text.match(regExpForParams);
     if (parametersList.length > 0) {
       return parametersList.map(param => param.replace(',', ''));
-    } else return [];
+    } else {return [];}
   };
 
-  const getChainUIDByLog = text => {
+  const getChainUIDByLog = (text) => {
     const chainUIDsList = text.match(regExpForChainUIDFind);
     if (chainUIDsList.length > 0) {
       return chainUIDsList.map(chainUID => chainUID.replace(',', ''));
-    } else return [];
+    } else {return [];}
   };
 
-  const getClassNamesByLog = text => {
+  const getClassNamesByLog = (text) => {
     const classNamesList = text.match(regExpForClassNameFind);
     if (classNamesList.length > 0) {
       return classNamesList.map(className => className.replace(',', ''));
-    } else return [];
+    } else {return [];}
   };
 };
 
-const getCellIndexByColumnName = columnName => {
+const getCellIndexByColumnName = (columnName) => {
   let ths = document.getElementById('elkData').children[0].children[0].children;
   for (let th of ths) {
     if (th.innerText == columnName) {
@@ -596,7 +685,7 @@ const detectEqualThreadLogs = () => {
     let chains = [];
     let allTrsWithChainAttributes = document.querySelectorAll('[chainid]');
     if (allTrsWithChainAttributes.length > 0) {
-      allTrsWithChainAttributes.forEach(tr => {
+      allTrsWithChainAttributes.forEach((tr) => {
         let counter = 0;
         let currentTrRowIndex = tr.rowIndex;
         allTrsWithChainAttributes.forEach((trNested, idx) => {
@@ -650,7 +739,7 @@ const detectEqualThreadLogs = () => {
     const messageCellIdx = getCellIndexByColumnName('message');
     const appNameCellIdx = getCellIndexByColumnName('app_name');
     const chains = getFoundChainsCounterSimple();
-    console.log(`detectEqualThreadLogs.aggregateChainLogsData: chains: `);
+    console.log('detectEqualThreadLogs.aggregateChainLogsData: chains: ');
     console.log(chains);
     if (chains.length > 0) {
       let foundChainsCounter = 0;
@@ -719,7 +808,7 @@ const detectEqualThreadLogs = () => {
                     'Количество логов в потоке',
                     chain.chainsCounter,
                   )}` +
-                  `<br>` +
+                  '<br>' +
                   makeHTMLChainInfoPanel(
                     'Ключ цепочечного запроса',
                     getParameterByAttributeValue(chain.chainName, 'chain')
@@ -727,26 +816,26 @@ const detectEqualThreadLogs = () => {
                       ? getParameterByAttributeValue(chain.chainName, 'chain')
                       : 'Не найден',
                   ) +
-                  `<br>` +
+                  '<br>' +
                   makeHTMLChainInfoPanel(
                     'Ключ межсервисного сообщения',
                     messageId && messageId.length > 0 ? messageId : 'Не найден',
                   ) +
-                  `<br>` +
+                  '<br>' +
                   makeHTMLChainInfoPanel(
                     'Ключ корреляции (ответа с запросом)',
                     correlationId && correlationId.length > 0
                       ? correlationId
                       : 'Не найден',
                   ) +
-                  `<br>` +
+                  '<br>' +
                   makeHTMLChainInfoPanel(
                     'Источник сообщения',
                     sourceInstanceId && sourceInstanceId.length > 0
                       ? sourceInstanceId
                       : 'Не найден',
                   ) +
-                  `<br>` +
+                  '<br>' +
                   makeHTMLChainInfoPanel(
                     'Название топика',
                     topic && topic.length > 0 ? topic : 'Не найден',
@@ -761,7 +850,7 @@ const detectEqualThreadLogs = () => {
                     'Значение смещения (offset)',
                     offset && offset.length > 0 ? offset : 'Не найден',
                   ) +
-                  `<br>` +
+                  '<br>' +
                   makeHTMLChainInfoPanel(
                     'Класс сообщения',
                     getParameterByAttributeValue(chain.chainName, 'class')
@@ -779,24 +868,24 @@ const detectEqualThreadLogs = () => {
       if (aggregateDataCallsCounter == 0) {
         document.getElementById(
           'elkButtonsContainer',
-        ).innerHTML += `<a href="#chainWrapperContent">Список потоков</a>`;
+        ).innerHTML += '<a href="#chainWrapperContent">Список потоков</a>';
         enrichELKTableWithSurroundThreadLogsButton();
       }
       aggregateDataCallsCounter++;
     }
   };
 
-  console.log(`found chains: `);
+  console.log('found chains: ');
   console.log(getFoundChainsCounterSimple());
   aggregateChainLogsData();
 };
 
-const hideTrByAttributeValue = attributeValue => {
+const hideTrByAttributeValue = (attributeValue) => {
   //скрывает группу однопоточных логов
   let nodeListByAttrValue = document.querySelectorAll(
     `[chainid="${attributeValue}"]`,
   );
-  nodeListByAttrValue.forEach(node => {
+  nodeListByAttrValue.forEach((node) => {
     node.style.display = node.style.display == 'none' ? 'table-row' : 'none';
   });
   if (!document.getElementById('excludeLogsWithoutKeyCheckBox').checked) {
@@ -852,7 +941,7 @@ const getParameterByAttributeValue = (attributeValue, parameterName = null) => {
     `[chainid="${attributeValue}"]`,
   );
   if (nodeListByAttrValue.length > 0) {
-    nodeListByAttrValue.forEach(node => {
+    nodeListByAttrValue.forEach((node) => {
       for (let childNode of node.children) {
         if (childNode.cellIndex == messageCellIndex) {
           for (let content of childNode.children) {
@@ -866,10 +955,10 @@ const getParameterByAttributeValue = (attributeValue, parameterName = null) => {
       }
     });
     return result;
-  } else return [];
+  } else {return [];}
 };
 
-const getRequestClassNameByAttributeValue = attributeValue => {
+const getRequestClassNameByAttributeValue = (attributeValue) => {
   const messageCellIndex = getCellIndexByColumnName('message');
   let result = [];
   const regDefaultClassIdFieldName = /defaultClassIdFieldName\=(\w|\.)*/;
@@ -896,7 +985,7 @@ const getAdditionalThreadLogs = async (trNodeInitiator, key = '') => {
     `getAdditionalThreadLogs has been called with key: ${key}, initiator: `,
   );
   console.log(trNodeInitiator);
-  const prepareCloneNode = cloneNode => {
+  const prepareCloneNode = (cloneNode) => {
     if (cloneNode) {
       for (let i = 0; i < cloneNode.children.length; i++) {
         for (let tdChild of cloneNode.children[i].children) {
@@ -989,13 +1078,13 @@ const getAdditionalThreadLogs = async (trNodeInitiator, key = '') => {
         } else {
           index == 0
             ? trNodeInit.parentNode.insertBefore(
-                tempCloneNode,
-                trNodeInit.nextSibling,
-              )
+              tempCloneNode,
+              trNodeInit.nextSibling,
+            )
             : trNodeInit.parentNode.insertBefore(
-                tempCloneNode,
-                prevCloneNode.nextSibling,
-              );
+              tempCloneNode,
+              prevCloneNode.nextSibling,
+            );
         }
       });
     }
@@ -1037,7 +1126,7 @@ const getAdditionalThreadLogs = async (trNodeInitiator, key = '') => {
       requestAdditionalThreadLogsObject.excludes.push('ru.gpb.audit.events');
     }
     console.log(
-      `getAdditionalThreadLogs.collectDataAndPrepareRequest: request object: `,
+      'getAdditionalThreadLogs.collectDataAndPrepareRequest: request object: ',
     );
     // console.log(requestAdditionalThreadLogsObject);
     return requestAdditionalThreadLogsObject;
@@ -1055,7 +1144,7 @@ const getAdditionalThreadLogs = async (trNodeInitiator, key = '') => {
         true,
       );
       console.log(
-        `getAdditionalThreadLogs.collectDataAndPrepareRequest: response`,
+        'getAdditionalThreadLogs.collectDataAndPrepareRequest: response',
       );
       console.log(response);
       renderHTMLContent(response, trNodeInitiator);
@@ -1078,7 +1167,7 @@ const getAdditionalThreadLogs = async (trNodeInitiator, key = '') => {
   }
 };
 
-const getThreadLogsWithKeys = threadLogsCollection => {
+const getThreadLogsWithKeys = (threadLogsCollection) => {
   for (let div of threadLogsCollection) {
     for (let child of div.children) {
       if (child.tagName == 'SPAN') {
@@ -1161,33 +1250,40 @@ const wrapUnwrapAllMessagesByWords = () => {
       if (tdChild.classList.contains('longtext2-unwrapped')) {
         tdChild.classList.remove('longtext2-unwrapped');
         tdChild.classList.add('longtext2');
-        tdChild.previousElementSibling.innerHTML = `<path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z"></path>`;
+        tdChild
+          .previousElementSibling
+          .innerHTML = '<path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,' +
+        '0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z"></path>';
       } else if (tdChild.classList.contains('longtext2')) {
         tdChild.classList.remove('longtext2');
         tdChild.classList.add('longtext2-unwrapped');
-        tdChild.previousElementSibling.innerHTML = `<path d="M17,13.41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z"></path>`;
+        tdChild.previousElementSibling.innerHTML = '<path d="M17,13.41,12.71,9.17a1,1,0,' +
+        '0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0' +
+        ',0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z"></path>';
       }
     }
   }
 };
 
-const wrapTargetMessage = element => {
+const wrapTargetMessage = (element) => {
   //console.log(element);
   const id = element.nextElementSibling.id;
   const messageContainer = document.getElementById(id);
   if (messageContainer.classList.contains('longtext2-unwrapped')) {
     messageContainer.classList.remove('longtext2-unwrapped');
     messageContainer.classList.add('longtext2');
-    element.innerHTML = `<path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z"></path>`;
+    element.innerHTML = '<path d="M17,9.17a1,1,0,0,0-1.41,0L12,12.71,8.46,9.17' +
+    'a1,1,0,0,0-1.41,0,1,1,0,0,0,0,1.42l4.24,4.24a1,1,0,0,0,1.42,0L17,10.59A1,1,0,0,0,17,9.17Z"></path>';
   } else {
     //раскрытие текста
     messageContainer.classList.remove('longtext2');
     messageContainer.classList.add('longtext2-unwrapped');
-    element.innerHTML = `<path d="M17,13.41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41a1,1,0,0,0,0,1.42,1,1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z"></path>`;
+    element.innerHTML = '<path d="M17,13.41,12.71,9.17a1,1,0,0,0-1.42,0L7.05,13.41' +
+    'a1,1,0,0,0,0,1.42,1,1,0,0,0,1.41,0L12,11.29l3.54,3.54a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29A1,1,0,0,0,17,13.41Z"></path>';
   }
 };
 
-const shiftFixedBlock = element => {
+const shiftFixedBlock = (element) => {
   const positionClassNames = ['position-b150px-r10px', 'position-b43-r442px'];
   const shiftClassNames = ['shift-fixed-bottom', 'shift-fixed-right'];
   positionClassNames.forEach((position, idx) => {
@@ -1202,7 +1298,7 @@ const shiftFixedBlock = element => {
 };
 
 //форматирование XML
-const prettifyXml = sourceXml => {
+const prettifyXml = (sourceXml) => {
   const xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
   const xsltDoc = new DOMParser().parseFromString(
     [

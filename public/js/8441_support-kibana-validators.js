@@ -102,6 +102,48 @@ const checkboxChecker = () => {
   }
 };
 
+const checkboxCheckerOpt = () => {
+  simpleCheckFields('additional');
+  simpleCheckFields('additional2');
+  simpleCheckFields('additional3');
+
+  const isFieldNamePicked = document.querySelector('#isFieldNamePicked').checked;
+  const isFieldNamePicked2 = document.querySelector('#isFieldNamePicked2').checked;
+
+  let numOfCheckBoxToCheck = 0;
+
+  if (isFieldNamePicked && isFieldNamePicked2) {
+    numOfCheckBoxToCheck = 3;
+  } else if (isFieldNamePicked) {
+    numOfCheckBoxToCheck = 1;
+  } else if (isFieldNamePicked2) {
+    numOfCheckBoxToCheck = 2;
+  }
+
+  const fieldValue = document.querySelector('#fieldValue');
+  const fieldValue2 = document.querySelector('#fieldValue2');
+  const fieldNameSelector = document.querySelector('#fieldNameSelector');
+  const fieldNameSelector2 = document.querySelector('#fieldNameSelector2');
+
+  switch (numOfCheckBoxToCheck) {
+    case 0:
+      removeClassRedBorder(fieldValue, true);
+      removeClassRedBorder(fieldValue2, true);
+      return 0;
+    case 1:
+      removeClassRedBorder(fieldValue2, true);
+      return fieldNameSelector.value && fieldValue.value ? true : 1;
+    case 2:
+      removeClassRedBorder(fieldValue, true);
+      return fieldNameSelector2.value && fieldValue2.value ? true : 2;
+    case 3:
+      return fieldNameSelector.value && fieldValue.value &&
+      fieldNameSelector2.value && fieldValue2.value ? true : 3;
+    default:
+      return false;
+  }
+};
+
 const fieldsCollector = () => {
   const operator = document.querySelector('#fieldOperatorSelector').value;
   const operator2 = document.querySelector('#fieldOperatorSelector2').value;
@@ -341,6 +383,92 @@ const middleCheckerElk = () => {
   }
 };
 
+const middleCheckerElkOpt = async () => {
+  try {
+    const supportPageExists = Boolean(document.getElementById('supportPage'));
+    const checkboxStatus = checkboxChecker();
+    const fieldsObject = await fieldsCollector();
+
+    const params = [
+      document.getElementById('additional').value || null,
+      document.getElementById('additional2').value || null,
+      document.getElementById('additional3').value || null,
+    ];
+
+    if (supportPageExists) {
+      if (checkboxStatus === true || checkboxStatus === 0) {
+        const startValue = document.getElementById('start').value;
+        const endValue = document.getElementById('end').value;
+
+        if (startValue && endValue) {
+          await SupportPageController.dateTimeInputValidator(false, false, fieldsObject);
+        } else {
+          await SupportPageController.callPopUp(
+            'Ошибка',
+            'Временной интервал должен быть указан',
+            5000,
+            'red',
+          );
+          checkDateFields('start');
+          checkDateFields('end');
+        }
+      }
+      return;
+    }
+
+    if (checkboxStatus === true || checkboxStatus === 0) {
+      const startValue = document.getElementById('start').value;
+      const endValue = document.getElementById('end').value;
+
+      if (startValue && endValue) {
+        document.getElementById('elk-search-params').innerHTML = params.join(', ');
+        checkDateFields('start');
+        checkDateFields('end');
+
+        if (simpleCheckFields('additional') &&
+           simpleCheckFields('additional2') &&
+           simpleCheckFields('additional3')) {
+          await SupportPageController.dateTimeInputValidator(true, false, fieldsObject);
+        } else {
+          await SupportPageController.callPopUp(
+            'Ошибка',
+            'Не заполнено одно или несколько обязательных полей',
+            5000,
+            'red',
+          );
+        }
+      } else {
+        await SupportPageController.callPopUp(
+          'Ошибка',
+          'Не заполнено одно или несколько обязательных полей',
+          5000,
+          'red',
+        );
+
+        checkDateFields('start');
+        checkDateFields('end');
+        simpleCheckFields('additional');
+        simpleCheckFields('additional2');
+        simpleCheckFields('additional3');
+      }
+    } else {
+      callChecker();
+      checkDateFields('start');
+      checkDateFields('end');
+      simpleCheckFields('additional');
+      simpleCheckFields('additional2');
+      simpleCheckFields('additional3');
+    }
+  } catch (e) {
+    SupportPageController.callPopUp(
+      'Ошибка',
+       `При выполнении запроса произошла ошибка: ${e}`,
+       5000,
+       'red',
+    );
+  }
+};
+
 const checkDateFields = (elementId) => {
   if (document.getElementById(elementId).value) {
     if (document.getElementById(elementId).classList.contains('red-border')) {
@@ -459,4 +587,48 @@ const simpleCheckFields = (elementId) => {
     removeClassRedBorder(document.getElementById('additional3'));
     return true;
   }
+};
+
+const simpleCheckFieldsOpt = (elementId) => {
+  const checkHasDocumentCheckedAnyBoxes = () => {
+    return document.querySelector('#isFieldNamePicked').checked ||
+       document.querySelector('#isFieldNamePicked2').checked;
+  };
+
+  const isSupportPage = document.getElementById('supportPage') !== null;
+  const elements = ['additional', 'additional2', 'additional3'];
+  const fieldValues = ['fieldValue', 'fieldValue2'];
+
+  const getElement = id => document.getElementById(id);
+  const isElementEmpty = id => getElement(id).value.length === 0;
+  const updateButtonState = (disabled) => {
+    const button = getElement('getELKlogsWithRange');
+    button.disabled = disabled;
+    button.style.cursor = disabled ? 'not-allowed' : 'pointer';
+  };
+
+  const updateBorder = (id, addClass) => {
+    const element = getElement(id);
+    addClass ? setClassRedBorder(element) : removeClassRedBorder(element);
+  };
+
+  if (checkHasDocumentCheckedAnyBoxes() && fieldValues.includes(elementId)) {
+    const isValid = getElement(elementId).value !== '';
+    updateButtonState(!isValid);
+    updateBorder(elementId, !isValid);
+    return;
+  }
+
+  if (!checkHasDocumentCheckedAnyBoxes() && !isSupportPage && elements.includes(elementId)) {
+    const otherElements = elements.filter(e => e !== elementId);
+    if (otherElements.every(isElementEmpty)) {
+      return getElement(elementId).value.length > 0;
+    }
+  }
+
+  const allAdditionalEmpty = elements.every(isElementEmpty);
+  updateButtonState(allAdditionalEmpty);
+  elements.forEach(id => updateBorder(id, allAdditionalEmpty));
+
+  return !allAdditionalEmpty;
 };

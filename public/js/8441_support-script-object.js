@@ -59,7 +59,7 @@ function showLongtext(className) {
   }
 }
 
-const showHideLongtextMessageByClassName = className => {
+const showHideLongtextMessageByClassName = (className) => {
   const ps = document.getElementsByClassName(className);
   for (let i = 0; i < ps.length; i++) {
     if (ps[i].style.overflow == 'hidden') {
@@ -82,7 +82,7 @@ Date.prototype.addHours = function(h) {
 };
 
 SupportPageActions = {
-  prettyXMLText: text => {
+  prettyXMLText: (text) => {
     if (text) {
       let arrayTextSeparated = text.split(';');
       arrayTextSeparated.forEach((textPart, idx) => {
@@ -131,18 +131,18 @@ SupportPageActions = {
         3000,
       );
     } else
-      SupportPageController.callPopUp(
-        'Ошибка',
-        'Для форматирования раскройте лог!',
-        5000,
-        '#511919',
-      );
+    {SupportPageController.callPopUp(
+      'Ошибка',
+      'Для форматирования раскройте лог!',
+      5000,
+      '#511919',
+    );}
   },
 
-  searchChildElementsWithContentByInitialElement: eventEmitterNode => {
+  searchChildElementsWithContentByInitialElement: (eventEmitterNode) => {
     let elementWithContentId;
     let childNodes = eventEmitterNode.parentNode.childNodes;
-    childNodes.forEach(child => {
+    childNodes.forEach((child) => {
       if (child.tagName == 'P' && child.id) {
         elementWithContentId = child.id;
       }
@@ -150,7 +150,7 @@ SupportPageActions = {
     return elementWithContentId;
   },
 
-  copyTextToClipBoardFromElementById: eventEmitterNode => {
+  copyTextToClipBoardFromElementById: (eventEmitterNode) => {
     let targetId = SupportPageActions.searchChildElementsWithContentByInitialElement(
       eventEmitterNode,
     );
@@ -236,7 +236,7 @@ SupportPageController = {
   },
 
   makeLargeModalFullLog: (fieldNames, fieldValues) => {
-    let innerSpan = ``;
+    let innerSpan = '';
     fieldNames.forEach((fieldName, i) => {
       if (
         (fieldName == 'stackTrace' || fieldName == 'Текст ошибки') &&
@@ -257,7 +257,7 @@ SupportPageController = {
           </div>`;
   },
 
-  showModal: modalHTML => {
+  showModal: (modalHTML) => {
     const divTarget = document.getElementById('modalContainer');
     divTarget.innerHTML = modalHTML;
     //document.body.insertBefore(div, divTarget);
@@ -265,12 +265,12 @@ SupportPageController = {
 
   closeModal: () => {
     const modal = document.getElementById('modalContainer');
-    modal.innerHTML = ``;
+    modal.innerHTML = '';
     document.body.style.overflow = 'auto';
   },
 
   callModal: (label, text, isTechnical = false) => {
-    let modalHTML = ``;
+    let modalHTML = '';
     if (isTechnical) {
       document.body.style.overflow = 'hidden';
       modalHTML = SupportPageController.makeLargeModalForLogs(label, text);
@@ -282,7 +282,7 @@ SupportPageController = {
     }
   },
 
-  callModalTable: elementId => {
+  callModalTable: (elementId) => {
     if (elementId.split('_')[1] == 'textRead') {
       let targetContentId = `${elementId.split('_')[0]}_long_${
         elementId.split('_')[2]
@@ -304,7 +304,7 @@ SupportPageController = {
     }
   },
 
-  callModalTableFullInfo: elementNode => {
+  callModalTableFullInfo: (elementNode) => {
     //row index
     let idx = elementNode.parentNode.parentNode.rowIndex;
     const elementId = elementNode.id;
@@ -318,7 +318,7 @@ SupportPageController = {
       ).children;
       const trs = document.querySelector('#elkData > tbody:nth-child(2)')
         .children;
-      const tds = document.querySelector(`#elkData > tbody:nth-child(2)`)
+      const tds = document.querySelector('#elkData > tbody:nth-child(2)')
         .children[idx - 1].children;
 
       for (let th of ths) {
@@ -329,13 +329,13 @@ SupportPageController = {
 
       for (let td of tds) {
         if (td.children.length <= 3) {
-          td.childNodes.forEach(child => {
+          td.childNodes.forEach((child) => {
             if (child.tagName == 'P') {
               fieldValues.push(child.innerText);
             }
           });
         } else {
-          td.childNodes.forEach(child => {
+          td.childNodes.forEach((child) => {
             if (child.tagName == 'P' && child.id) {
               fieldValues.push(child.innerText);
             }
@@ -399,7 +399,7 @@ SupportPageController = {
 
   closeLoaderFlex: () => {
     if (document.getElementById('div-temp-spinner')) {
-      document.getElementById('div-temp-spinner').innerHTML = ``;
+      document.getElementById('div-temp-spinner').innerHTML = '';
     }
   },
 
@@ -410,10 +410,10 @@ SupportPageController = {
     }
   },
 
-  closeLoader: targetId => {
+  closeLoader: (targetId) => {
     if (targetId) {
       const loaderHolder = document.getElementById(targetId);
-      loaderHolder.innerHTML = ``;
+      loaderHolder.innerHTML = '';
     }
   },
 
@@ -459,7 +459,7 @@ SupportPageController = {
       document.getElementById(
         'mainBPMdataContainer',
       ).innerHTML = bpmDataContainer;
-      SupportPageController.callPopUp('Данные из BPM получены', ``, 2000);
+      SupportPageController.callPopUp('Данные из BPM получены', '', 2000);
       // setTimeout(() => {
       //   SupportPageController.callPopUp(
       //     "Загрузка завершена",
@@ -493,7 +493,7 @@ SupportPageController = {
       SupportPageController.closeLoaderFlex();
       SupportPageController.callPopUp(
         'Ошибка',
-        `В запросе не передан номер заявки`,
+        'В запросе не передан номер заявки',
         3000,
         '#511919',
       );
@@ -519,7 +519,7 @@ SupportPageController = {
           SupportPageController.closeLoaderFlex();
           SupportPageController.callPopUp(
             'Данные интеграционных логов получены',
-            ``,
+            '',
             2500,
           );
         }
@@ -536,7 +536,7 @@ SupportPageController = {
   },
 
   reloadMainJS: () => {
-    console.log(`reloadMainJS: reloading main script` + '\n');
+    console.log('reloadMainJS: reloading main script' + '\n');
 
     if (document.getElementById('mainScript')) {
       let oldSrc = document.getElementById('mainScript');
@@ -557,7 +557,7 @@ SupportPageController = {
     }
   },
   reloadUtilsJS: () => {
-    console.log(`reloadUtilsJS: reloading utils script` + '\n');
+    console.log('reloadUtilsJS: reloading utils script' + '\n');
 
     if (document.getElementById('mainScriptUtils2')) {
       let oldSrc = document.getElementById('mainScriptUtils2');
@@ -587,13 +587,13 @@ SupportPageController = {
   //     src.src = '/public/js/8441_kibana-utils.js';
   //     document.body.appendChild(src);
   // },
-  srcELKController: `<script id="mainScriptUtils3" src="/public/js/ELKLogsTableController.js"></script>`,
+  srcELKController: '<script id="mainScriptUtils3" src="/public/js/ELKLogsTableController.js"></script>',
 
   loadELKControllerJS: () => {
     if (!document.getElementById('mainScriptUtils3')) {
       let src = document.createElement('script');
       src.id = 'mainScriptUtils3';
-      src.src = `/public/js/ELKLogsTableController.js`;
+      src.src = '/public/js/ELKLogsTableController.js';
       document.body.appendChild(src);
       return Promise.resolve(true);
     } else {
@@ -606,7 +606,7 @@ SupportPageController = {
       caller.parentNode.removeChild(caller);
     }
 
-    console.log(`loadAnalyzeJS: loading analyze script` + '\n');
+    console.log('loadAnalyzeJS: loading analyze script' + '\n');
 
     if (document.getElementById('analyzeScript')) {
       let oldSrc = document.getElementById('analyzeScript');
@@ -636,7 +636,7 @@ SupportPageController = {
     }
 
     console.log(
-      `loadKibanaValidatorScript: loading ELK page search scripts` + '\n',
+      'loadKibanaValidatorScript: loading ELK page search scripts' + '\n',
     );
 
     let src = document.createElement('script');
@@ -714,7 +714,7 @@ SupportPageController = {
     } else {
       SupportPageController.callPopUp(
         'Ошибка',
-        `Необходимо задать период поиска логов!`,
+        'Необходимо задать период поиска логов!',
         5000,
         '#511919',
       );
@@ -775,7 +775,7 @@ SupportPageController = {
         'Получение данных из хранилища логов',
       );
     }
-    console.log(`Request for ELK search with params:` + '\n');
+    console.log('Request for ELK search with params:' + '\n');
     requestObj = { ...requestObj, isOpt: true, isAdditional: additionalFlag };
     console.log(requestObj);
     const urlELK = `http://${SupportPageController._currentHostName}:8440/elksearch`;
@@ -839,7 +839,7 @@ SupportPageController = {
           }
         } else {
           let response = await result.json();
-          console.log(`getELKlogsOpt: got additionalFlag response`);
+          console.log('getELKlogsOpt: got additionalFlag response');
           console.log(response);
           return response;
         }
@@ -905,24 +905,24 @@ SupportPageController = {
       params[0] = additional
         ? additional
         : additional2
-        ? additional2
-        : additional3;
+          ? additional2
+          : additional3;
       params[1] = additional2
         ? additional2
         : additional
-        ? additional
-        : additional3;
+          ? additional
+          : additional3;
       params[4] = additional3
         ? additional3
         : additional2
-        ? additional2
-        : additional;
+          ? additional2
+          : additional;
     } else {
       let removed = [];
       let paramsCopy = params;
       let idx = 0;
 
-      console.log(`Params before started splicing: ` + '\n');
+      console.log('Params before started splicing: ' + '\n');
       console.log(paramsCopy);
 
       params.forEach((param, i) => {
@@ -946,9 +946,9 @@ SupportPageController = {
       });
 
       params = paramsCopy;
-      console.log(`Params after splicing: ` + '\n');
+      console.log('Params after splicing: ' + '\n');
       console.log(paramsCopy);
-      console.log(`Removed elements: ` + '\n');
+      console.log('Removed elements: ' + '\n');
       console.log(removed);
 
       if (additional) {
@@ -973,7 +973,7 @@ SupportPageController = {
 
     parameters = { ...parameters, isOpt: false };
 
-    console.log(`Request for ELK search with params:` + '\n');
+    console.log('Request for ELK search with params:' + '\n');
     console.log(parameters);
     const urlELK = `http://${SupportPageController._currentHostName}:8440/elksearch`;
     const result = await fetch(urlELK, {
@@ -1071,7 +1071,7 @@ SupportPageController = {
       );
       await result;
       if (result.ok) {
-        alert(`Ретрай заявки выполнен`);
+        alert('Ретрай заявки выполнен');
       } else {
         alert(`Ответ с ошибкой, статус ответа: ${result.status}`);
       }
@@ -1152,7 +1152,7 @@ SupportPageController = {
     return new Date(dateTimeStr).toISOString();
   },
 
-  showInfoPanel: emitter => {},
+  showInfoPanel: (emitter) => {},
 
   spinnerMain: `<div class="dimmer">
     <div class='container'>
@@ -1189,7 +1189,7 @@ SupportPageController = {
   </div>`;
   },
 
-  showLoaderBPM: id => {
+  showLoaderBPM: (id) => {
     if (id) {
       const loaderHolder = document.getElementById(id);
       loaderHolder.innerHTML = SupportPageController.spinnerBPM;
@@ -1210,7 +1210,7 @@ SupportPageController = {
   ) => {
     if (eventName == 'show') {
       //получение координат мыши
-      console.log(`event: `);
+      console.log('event: ');
       console.log(event);
       const coordX = event.clientX;
       const coordY = event.clientY;
@@ -1224,7 +1224,7 @@ SupportPageController = {
   },
 
   showPopUpPermanent: (popUpHTML, coordY, coordX) => {
-    let tempContainer = ``;
+    let tempContainer = '';
     if (!document.getElementById('div-temp-perm')) {
       for (let child of document.body.children) {
         if (child.tagName == 'DIV') {
@@ -1249,7 +1249,7 @@ SupportPageController = {
   },
 
   closePermanentPopup: () => {
-    document.getElementById('div-temp-perm').innerHTML = ``;
+    document.getElementById('div-temp-perm').innerHTML = '';
   },
 
   makePopUpPermanent: (title, text) => {
@@ -1283,20 +1283,20 @@ SupportPageController = {
   },
 
   showPopUp: (popUpHTML, ms) => {
-    let tempContainer = ``;
+    let tempContainer = '';
 
     if (!document.getElementById('div-temp')) {
       tempContainer = document.body.appendChild(document.createElement('div'));
       tempContainer.id = 'div-temp';
       tempContainer.innerHTML = popUpHTML;
       setTimeout(() => {
-        tempContainer.innerHTML = ``;
+        tempContainer.innerHTML = '';
       }, ms);
     } else {
       document.getElementById('div-temp').innerHTML = popUpHTML;
 
       setTimeout(() => {
-        document.getElementById('div-temp').innerHTML = ``;
+        document.getElementById('div-temp').innerHTML = '';
       }, ms);
     }
   },

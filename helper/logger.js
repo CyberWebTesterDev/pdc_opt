@@ -1,8 +1,8 @@
-const dateTime = require("../datetime");
+const dateTime = require('../datetime');
 
-exports.loggerServer = message => {
+exports.loggerServer = (message) => {
   dateTime.getCurrentDateTime();
-  console.log(`Server: ${message}` + "\n");
+  console.log(`Server: ${message}` + '\n');
 };
 exports.addHours = () => {
   return (Date.prototype.addHours = function(h) {

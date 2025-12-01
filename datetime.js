@@ -13,20 +13,15 @@
 // console.log(currentTime.day+"."+(currentTime.month+1)+"."+currentTime.year+" "+currentTime.hh+":"+currentTime.mm+":"+currentTime.ss)
 // }
 
-
-Date.prototype.addHours = function(h) {        
-    this.setTime(this.getTime() + (h*60*60*1000));
-    return this; 
-    }
-
+Date.prototype.addHours = function(h) {
+  this.setTime(this.getTime() + (h*60*60*1000));
+  return this;
+};
 
 const getCurrentDateTime = () => {
 
-	console.log(new Date().addHours(3).toISOString().replace('T', ' ').replace('Z', ''))
+  console.log(new Date().addHours(3).toISOString().replace('T', ' ').replace('Z', ''));
 
-}
-
-
-
+};
 
 exports.getCurrentDateTime = getCurrentDateTime;

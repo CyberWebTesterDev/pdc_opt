@@ -5,5 +5,5 @@ module.exports.environmentConfiguration = {
     ui_cc: 'ui-cc',
     ui_auto: 'ui-auto',
     ui_mortgage: 'ui-mortgage',
-  }
-}
+  },
+};

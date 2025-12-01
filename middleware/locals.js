@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     sessionStarted: req.session.sessionStarted,
     remoteIPAddress: req.session.remoteIPAddress,
     userName: req.session.userName,
-    personalData: req.session.personalData
+    personalData: req.session.personalData,
   };
 
   next();

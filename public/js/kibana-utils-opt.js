@@ -116,26 +116,28 @@ const aggregateChainLogsDataOpt = () => {
 };
 
 const validateCheckBoxRelatedFieldsOpt = () => {
-  let isCheckBoxesValid = true;
+  let isValid = true;
   const { checkboxes } = stateForm;
 
   checkboxes.forEach((checkbox) => {
-    if (checkbox.selected) {
-      const field = getElement(checkbox.relatedFieldId);
+    if (!checkbox.selected) return;
 
-      if (checkbox.relatedFieldId === 'excludeParameters') {
-        isCheckBoxesValid = stateForm.excludeParameters.values.length > 0;
-      } else {
-        isCheckBoxesValid = Boolean(field.value);
-      }
+    const field = getElement(checkbox.relatedFieldId);
+    let currentValid;
 
-      if (!isCheckBoxesValid) {
-        setClassRedBorderLight(field);
-      } else {
-        removeClassRedBorderLight(field);
-      }
+    if (checkbox.relatedFieldId === 'excludeParameters') {
+      currentValid = stateForm.excludeParameters.values.length > 0;
+    } else {
+      currentValid = Boolean(field && field.value);
+    }
+
+    if (!currentValid) {
+      setClassRedBorderLight(field);
+      isValid = false;
+    } else {
+      removeClassRedBorderLight(field);
     }
   });
 
-  return isCheckBoxesValid;
+  return isValid;
 };

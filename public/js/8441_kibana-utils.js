@@ -1,5 +1,5 @@
+// THIS IS OLD VERSION FILE: TO BE CONSIDER OBSOLETE
 const getElement = id => document.getElementById(id);
-
 const stateForm = {
   start: '',
   end: '',
